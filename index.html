@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BENTLEY | Luxury Automotive</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- GOOGLE FONTS -->
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+<style>
+:root{
+    --gold:#cfa75d;
+    --bg-dark:#0d0d0d;
+    --card-gradient:linear-gradient(145deg,#1a1a1a,#111111);
+}
+
+/* Animate the body background */
+body{
+    font-family:'Montserrat', sans-serif;
+    background: linear-gradient(45deg, #0d0d0d, #1b1b1b, #111111, #222222);
+    background-size: 400% 400%;
+    color:#fff;
+    overflow-x:hidden;
+    animation: gradientShift 15s ease infinite;
+    position: relative;
+}
+
+@keyframes gradientShift {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+
+/* Subtle glowing overlay */
+body:before {
+    content:"";
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: radial-gradient(circle at 30% 30%, rgba(207,167,93,0.08), transparent 70%),
+                radial-gradient(circle at 70% 70%, rgba(207,167,93,0.08), transparent 70%);
+    pointer-events:none;
+    z-index:1;
+}
+
+/* NAVBAR */
+nav{
+    position:fixed;
+    top:0;
+    width:100%;
+    padding:18px 60px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:rgba(0,0,0,0.75);
+    backdrop-filter:blur(12px);
+    z-index:100;
+    box-shadow:0 5px 30px rgba(0,0,0,0.7);
+}
+
+.logo img{height:50px}
+
+nav ul{
+    display:flex;
+    gap:30px;
+    list-style:none;
+}
+
+nav ul li{
+    cursor:pointer;
+    transition:0.3s;
+}
+nav ul li:hover{color:var(--gold);}
+
+/* MOBILE MENU */
+.menu-btn{
+    display:none;
+    font-size:28px;
+    cursor:pointer;
+}
+
+@media(max-width:900px){
+    nav ul{
+        position:fixed;
+        top:80px;
+        right:-100%;
+        flex-direction:column;
+        background:rgba(0,0,0,0.95);
+        width:250px;
+        height:100vh;
+        padding:40px;
+        transition:.4s;
+    }
+    nav ul.show{right:0}
+    .menu-btn{display:block}
+}
+
+/* SLIDER */
+.slider{height:100vh;overflow:hidden;position:relative; z-index:2;}
+.slides{display:flex;width:300%;animation:slide 18s infinite}
+.slide{width:100%;position:relative}
+
+.slide img{
+    width:100%;
+    height:100vh;
+    object-fit:cover;
+    filter:brightness(100%) contrast(115%) saturate(120%);
+    animation:zoom 16s linear infinite;
+    transition:1s;
+}
+
+/* Add glow behind slider content */
+.slide::after{
+    content:"";
+    position:absolute;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(207,167,93,0.08);
+    mix-blend-mode:overlay;
+}
+
+@keyframes zoom{from{transform:scale(1)}to{transform:scale(1.08)}}
+@keyframes slide{
+    0%,30%{margin-left:0}
+    35%,65%{margin-left:-100%}
+    70%,100%{margin-left:-200%}
+}
+
+.slide-content{
+    position:absolute;
+    bottom:22%;
+    left:8%;
+    max-width:600px;
+    z-index:3;
+}
+
+.slide-content h1{
+    font-family:'Cinzel', serif;
+    font-size:56px;
+    color:var(--gold);
+    text-shadow:0 0 15px rgba(207,167,93,0.7);
+}
+
+/* BUTTON */
+.btn{
+    display:inline-block;
+    margin-top:20px;
+    padding:14px 30px;
+    border:1px solid var(--gold);
+    color:var(--gold);
+    text-decoration:none;
+    font-weight:600;
+    transition:.3s;
+    box-shadow:0 5px 20px rgba(207,167,93,0.4);
+}
+.btn:hover{
+    background:var(--gold);
+    color:#000;
+    box-shadow:0 10px 30px rgba(207,167,93,0.7);
+}
+
+/* SECTIONS */
+section{padding:120px 60px}
+
+/* CARDS */
+.card, .model-card{
+    background:var(--card-gradient);
+    border-radius:16px;
+    box-shadow:0 25px 50px rgba(0,0,0,0.7);
+    transition:.4s;
+    position: relative;
+}
+
+.card:hover, .model-card:hover{
+    transform:translateY(-10px);
+    box-shadow:0 35px 80px rgba(207,167,93,0.3);
+}
+
+/* 3D TILT IMAGE */
+.model-card{
+    perspective:1000px;
+    padding:20px;
+}
+.model-card img{
+    width:100%;
+    height:240px;
+    object-fit:cover;
+    border-radius:12px;
+    transition:.5s;
+}
+.model-card:hover img{
+    transform:rotateY(8deg) scale(1.08);
+    filter:brightness(115%);
+}
+
+/* Price tag */
+.price-tag {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: var(--gold);
+    color: #000;
+    font-weight: 700;
+    padding: 8px 14px;
+    border-radius: 12px;
+    font-family: 'Montserrat', sans-serif;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+    z-index: 5;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.model-card:hover .price-tag {
+    transform: scale(1.1);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+/* Add description */
+.model-info{
+    margin-top:12px;
+    font-size:16px;
+    color:#ccc;
+}
+
+/* GALLERY */
+.gallery-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:25px;
+}
+
+.gallery-grid img{
+    height:280px;
+    object-fit:cover;
+    border-radius:14px;
+    box-shadow:0 25px 55px rgba(0,0,0,.8);
+    transition:.4s;
+}
+.gallery-grid img:hover{
+    transform:scale(1.07);
+    box-shadow:0 35px 80px rgba(207,167,93,.35);
+}
+
+/* CTA */
+.cta{text-align:center;background:linear-gradient(135deg,#0b0b0b,#1f1f1f);padding:140px 60px}
+.cta h2{color:var(--gold);font-family:'Cinzel';text-shadow:0 0 10px rgba(207,167,93,0.7)}
+.cta .btn{font-size:18px;padding:16px 36px}
+
+/* FOOTER */
+footer{text-align:center;padding:30px;background:linear-gradient(135deg,#0b0b0b,#1a1a1a);opacity:.85;color:#ccc}
+
+</style>
+</head>
+<h1 style="color:red;
+    text-align:center;">TEST WEBSITE LOADED</h1>
+<body>
+
+<!-- NAV -->
+<nav>
+    <div class="logo">
+        <img src="https://tse3.mm.bing.net/th/id/OIP.XGH5-a6uPgtJnkUWJPi4awHaEv?cb=ucfimg2&ucfimg=1&w=640&h=410&rs=1&pid=ImgDetMain&o=7&rm=3">
+    </div>
+    <div class="menu-btn" onclick="toggleMenu()">☰</div>
+    <ul id="menu">
+        <li>Home</li>
+        <li>Models</li>
+        <li>Experience</li>
+        <li>Contact</li>
+    </ul>
+</nav>
+
+<!-- SLIDER -->
+<section class="slider">
+    <div class="slides">
+        <div class="slide">
+            <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/models/27my/supersports/Homepage%20Slider.jpg/_jcr_content/renditions/original.image_file.1920.960.file/Homepage%20Slider.jpg">
+            <div class="slide-content">
+                <h1>Supersports</h1>
+                <a class="btn">EXPLORE</a>
+            </div>
+        </div>
+        <div class="slide">
+            <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/models/26my/bentayga-speed/Homepage%20Main.jpg/_jcr_content/renditions/original.image_file.1920.960.file/Homepage%20Main.jpg">
+            <div class="slide-content">
+                <h1>Continental GT</h1>
+                <a class="btn">DISCOVER</a>
+            </div>
+        </div>
+        <div class="slide">
+            <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/homepage/26my-azure/GTC%20Azure%20Desktop%20Dynamic.jpg/_jcr_content/renditions/original.image_file.1920.960.file/GTC%20Azure%20Desktop%20Dynamic.jpg">
+            <div class="slide-content">
+                <h1>Bentayga</h1>
+                <a class="btn">VIEW MODELS</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FEATURED MODELS -->
+<section class="models">
+    <h2 style="text-align:center;font-family:Cinzel;margin-bottom:60px">Featured Models</h2>
+    <div class="gallery-grid">
+        <div class="model-card">
+            <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/models/26my/bentayga-speed/Navigation%20Front.png/_jcr_content/renditions/original.image_file.1074.537.file/Navigation%20Front.png">
+            <div class="price-tag">$180,000</div>
+            <div class="model-info">
+                Bentley Bentayga<br>
+                Ultimate luxury SUV with powerful 4.0L V8 engine.
+            </div>
+        </div>
+        <div class="model-card">
+            <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/navigation/model-nav/model-range/Spur%20Mulliner%20profile%20v2.png/_jcr_content/renditions/original.image_file.1074.537.file/Spur%20Mulliner%20profile%20v2.png">
+            <div class="price-tag">$220,000</div>
+            <div class="model-info">
+                Continental GT<br>
+                Iconic grand tourer combining performance and elegance.
+            </div>
+        </div>
+        <div class="model-card">
+            <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/models/27my/supersports/Nav%20Front%203.3.png/_jcr_content/renditions/original.image_file.1074.537.file/Nav%20Front%203.3.png">
+            <div class="price-tag">$250,000</div>
+            <div class="model-info">
+                Supersports<br>
+                High-performance supercar with breathtaking speed.
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- GALLERY -->
+<section class="gallery">
+    <h2 style="text-align:center;font-family:Cinzel;margin-bottom:60px">Luxury Gallery</h2>
+    <div class="gallery-grid">
+        <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/models/25my/25my-gt/GT%20Speed%20Front%203.4%20v2.png/_jcr_content/renditions/original.image_file.1074.537.file/GT%20Speed%20Front%203.4%20v2.png">
+        <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/navigation/model-nav/mulliner/P2750%20Nav%20Front3.4.png/_jcr_content/renditions/original.image_file.1074.537.file/P2750%20Nav%20Front3.4.png">
+        <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/models/25my/25my-gt/GT%20Speed%20Front%203.4%20v2.png/_jcr_content/renditions/original.image_file.1074.537.file/GT%20Speed%20Front%203.4%20v2.png">
+        <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/homepage/launch/EWB%20Mulliner%20Card%20Item%20V2.jpg/_jcr_content/renditions/original.image_file.662.1324.file/EWB%20Mulliner%20Card%20Item%20V2.jpg">
+        <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/homepage/launch/Pre-Owned%20Card%20Media%202.jpg/_jcr_content/renditions/original.image_file.662.1324.file/Pre-Owned%20Card%20Media%202.jpg">
+    </div>
+        <img src="https://res.cloudinary.com/motortrak/f_auto,w_1920/v1751383892/locator/bentley/content/homepage/home-hero-desktop.jpg">
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+    <h2>Begin Your Luxury Journey</h2>
+    <a class="btn">BOOK A TEST DRIVE</a>
+</section>
+
+<!-- FOOTER -->
+<footer>© 2025 Bentley — Premium Automotive Experience</footer>
+
+<script>
+function toggleMenu(){
+    document.getElementById("menu").classList.toggle("show");
+}
+
+/* GSAP SCROLL ANIMATION */
+gsap.utils.toArray("section").forEach(sec=>{
+    gsap.from(sec,{
+        opacity:0,
+        y:80,
+        duration:1,
+        scrollTrigger:{
+            trigger:sec,
+            start:"top 80%"
+        }
+    })
+});
+</script>
+
+</body>
+</html>
