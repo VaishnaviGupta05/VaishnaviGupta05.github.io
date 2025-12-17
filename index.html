@@ -37,7 +37,7 @@ body{
 }
 
 /* Subtle glowing overlay */
-body:before {
+body::before {
     content:"";
     position:fixed;
     top:0; left:0;
@@ -252,20 +252,66 @@ section{padding:120px 60px}
 
 /* FOOTER */
 footer{text-align:center;padding:30px;background:linear-gradient(135deg,#0b0b0b,#1a1a1a);opacity:.85;color:#ccc}
+/* =======================
+   MEGA FOOTER (NEW)
+======================= */
+footer{
+    background:#f7f6f3;
+    color:#111;
+    padding:80px 60px 40px;
+}
 
+.footer-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:50px;
+    margin-bottom:50px;
+}
+
+.footer-col h4{
+    font-family:'Cinzel';
+    margin-bottom:18px;
+    font-size:18px;
+}
+
+.footer-col ul{
+    list-style:none;
+    padding:0;
+}
+.footer-col li{
+    margin-bottom:10px;
+    font-size:14px;
+    cursor:pointer;
+}
+.footer-col li:hover{
+    color:var(--gold);
+}
+
+.footer-bottom{
+    border-top:1px solid #ccc;
+    padding-top:30px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:25px;
+    font-size:13px;
+    justify-content:center;
+}
+
+/* GSAP */
+section{opacity:0}
 </style>
 </head>
-<h1 style="color:red;
-    text-align:center;">TEST WEBSITE LOADED</h1>
+
 <body>
 
-<!-- NAV -->
 <nav>
     <div class="logo">
-        <img src="https://tse3.mm.bing.net/th/id/OIP.XGH5-a6uPgtJnkUWJPi4awHaEv?cb=ucfimg2&ucfimg=1&w=640&h=410&rs=1&pid=ImgDetMain&o=7&rm=3">
+        <img src="https://tse3.mm.bing.net/th/id/OIP.JbIIVoSG4sGA0BOWATJaTQHaEK">
     </div>
     <div class="menu-btn" onclick="toggleMenu()">☰</div>
     <ul id="menu">
+    <strong>BENTLEY</strong>
+    <ul>
         <li>Home</li>
         <li>Models</li>
         <li>Experience</li>
@@ -273,25 +319,24 @@ footer{text-align:center;padding:30px;background:linear-gradient(135deg,#0b0b0b,
     </ul>
 </nav>
 
-<!-- SLIDER -->
 <section class="slider">
     <div class="slides">
         <div class="slide">
-            <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/models/27my/supersports/Homepage%20Slider.jpg/_jcr_content/renditions/original.image_file.1920.960.file/Homepage%20Slider.jpg">
+            <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/models/27my/supersports/Homepage%20Slider.jpg">
             <div class="slide-content">
                 <h1>Supersports</h1>
                 <a class="btn">EXPLORE</a>
             </div>
         </div>
         <div class="slide">
-            <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/models/26my/bentayga-speed/Homepage%20Main.jpg/_jcr_content/renditions/original.image_file.1920.960.file/Homepage%20Main.jpg">
+            <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/models/26my/bentayga-speed/Homepage%20Main.jpg">
             <div class="slide-content">
                 <h1>Continental GT</h1>
                 <a class="btn">DISCOVER</a>
             </div>
         </div>
         <div class="slide">
-            <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/homepage/26my-azure/GTC%20Azure%20Desktop%20Dynamic.jpg/_jcr_content/renditions/original.image_file.1920.960.file/GTC%20Azure%20Desktop%20Dynamic.jpg">
+            <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/homepage/26my-azure/GTC%20Azure%20Desktop%20Dynamic.jpg">
             <div class="slide-content">
                 <h1>Bentayga</h1>
                 <a class="btn">VIEW MODELS</a>
@@ -300,38 +345,27 @@ footer{text-align:center;padding:30px;background:linear-gradient(135deg,#0b0b0b,
     </div>
 </section>
 
-<!-- FEATURED MODELS -->
-<section class="models">
-    <h2 style="text-align:center;font-family:Cinzel;margin-bottom:60px">Featured Models</h2>
-    <div class="gallery-grid">
-        <div class="model-card">
-            <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/models/26my/bentayga-speed/Navigation%20Front.png/_jcr_content/renditions/original.image_file.1074.537.file/Navigation%20Front.png">
-            <div class="price-tag">$180,000</div>
-            <div class="model-info">
-                Bentley Bentayga<br>
-                Ultimate luxury SUV with powerful 4.0L V8 engine.
-            </div>
-        </div>
-        <div class="model-card">
-            <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/navigation/model-nav/model-range/Spur%20Mulliner%20profile%20v2.png/_jcr_content/renditions/original.image_file.1074.537.file/Spur%20Mulliner%20profile%20v2.png">
-            <div class="price-tag">$220,000</div>
-            <div class="model-info">
-                Continental GT<br>
-                Iconic grand tourer combining performance and elegance.
-            </div>
-        </div>
-        <div class="model-card">
-            <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/models/27my/supersports/Nav%20Front%203.3.png/_jcr_content/renditions/original.image_file.1074.537.file/Nav%20Front%203.3.png">
-            <div class="price-tag">$250,000</div>
-            <div class="model-info">
-                Supersports<br>
-                High-performance supercar with breathtaking speed.
-            </div>
-        </div>
+<section>
+<h2 style="text-align:center;font-family:Cinzel;margin-bottom:60px">Featured Models</h2>
+<div class="gallery-grid">
+    <div class="model-card">
+        <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/models/26my/bentayga-speed/Navigation%20Front.png">
+        <div class="price-tag">$180,000</div>
+        Bentley Bentayga
     </div>
+    <div class="model-card">
+        <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/navigation/model-nav/model-range/Spur%20Mulliner%20profile%20v2.png">
+        <div class="price-tag">$220,000</div>
+        Continental GT
+    </div>
+    <div class="model-card">
+        <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/models/27my/supersports/Nav%20Front%203.3.png">
+        <div class="price-tag">$250,000</div>
+        Supersports
+    </div>
+</div>
 </section>
 
-<!-- GALLERY -->
 <section class="gallery">
     <h2 style="text-align:center;font-family:Cinzel;margin-bottom:60px">Luxury Gallery</h2>
     <div class="gallery-grid">
@@ -345,30 +379,83 @@ footer{text-align:center;padding:30px;background:linear-gradient(135deg,#0b0b0b,
     </div>
 </section>
 
-<!-- CTA -->
 <section class="cta">
-    <h2>Begin Your Luxury Journey</h2>
-    <a class="btn">BOOK A TEST DRIVE</a>
+<h2>Begin Your Luxury Journey</h2>
+<a class="btn">BOOK A TEST DRIVE</a>
 </section>
 
-<!-- FOOTER -->
-<footer>© 2025 Bentley — Premium Automotive Experience</footer>
+<!-- MEGA FOOTER -->
+<footer>
+<div class="footer-grid">
+
+<div class="footer-col">
+<h4>Models</h4>
+<ul>
+<li>Bentayga</li>
+<li>Flying Spur</li>
+<li>Continental GT</li>
+<li>Mulliner</li>
+<li>Pre-Owned</li>
+</ul>
+</div>
+
+<div class="footer-col">
+<h4>Your Bentley</h4>
+<ul>
+<li>Service & Maintenance</li>
+<li>Ownership Support</li>
+<li>Technology</li>
+<li>Financial Services</li>
+</ul>
+</div>
+
+<div class="footer-col">
+<h4>Culture & Lifestyle</h4>
+<ul>
+<li>Latest Articles</li>
+<li>Architecture & Design</li>
+<li>Automotive</li>
+<li>Audio</li>
+</ul>
+</div>
+
+<div class="footer-col">
+<h4>About</h4>
+<ul>
+<li>News</li>
+<li>History & Heritage</li>
+<li>People & Expertise</li>
+<li>Factory Tours</li>
+</ul>
+</div>
+
+<div class="footer-col">
+<h4>Corporate</h4>
+<ul>
+<li>Brand Manifesto</li>
+<li>Sustainability</li>
+<li>Compliance & Risk</li>
+<li>Careers</li>
+</ul>
+</div>
+
+</div>
+<div class="footer-bottom">
+<span>© 2025 Bentley Motors</span>
+<span>Privacy Policy</span>
+<span>Terms & Conditions</span>
+<span>Cookie Policy</span>
+<span>Contact Us</span>
+</div>
+</footer>
 
 <script>
-function toggleMenu(){
-    document.getElementById("menu").classList.toggle("show");
-}
-
-/* GSAP SCROLL ANIMATION */
 gsap.utils.toArray("section").forEach(sec=>{
-    gsap.from(sec,{
-        opacity:0,
-        y:80,
+    gsap.to(sec,{
+        opacity:1,
+        y:0,
         duration:1,
-        scrollTrigger:{
-            trigger:sec,
-            start:"top 80%"
-        }
+        scrollTrigger:{trigger:sec,start:"top 80%"}
     })
 });
 </script>
