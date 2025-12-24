@@ -145,6 +145,89 @@ nav ul li:hover{color:var(--gold);}
     color:var(--gold);
     text-shadow:0 0 15px rgba(207,167,93,0.7);
 }
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+  background-color: #000;
+}
+
+/* HERO SECTION */
+.hero {
+  position: relative;
+  height: 100vh;
+  background: url("https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/homepage/october-24/Configure%20your%20perfect%20car%20Main.jpg/_jcr_content/renditions/original.image_file.1920.823.file/Configure%20your%20perfect%20car%20Main.jpg") center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* DARK GRADIENT OVER IMAGE */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    rgba(100, 97, 97, 0.4),
+    rgba(0, 0, 0, 0.6)
+  );
+}
+
+/* CENTER GLASS PANEL */
+.overlay {
+  position: relative;
+  max-width: 600px;
+  padding: 50px 40px;
+  text-align: center;
+  background: rgba(120, 95, 55, 0.6);
+  backdrop-filter: blur(8px);
+  color: #fff;
+}
+
+/* SMALL TOP TEXT */
+.eyebrow {
+  font-size: 14px;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+  opacity: 0.85;
+}
+
+/* MAIN HEADING */
+.overlay h1 {
+  font-size: 36px;
+  font-weight: 300;
+  margin-bottom: 20px;
+}
+
+/* DESCRIPTION */
+.description {
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 30px;
+  opacity: 0.9;
+}
+
+/* BUTTON */
+.cta {
+  background-color: #2f4f4f;
+  color: #fff;
+  border: none;
+  padding: 14px 26px;
+  font-size: 14px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.cta:hover {
+  background-color: #3f6f6f;
+}
+
 /* =======================
    ABOUT BENTLEY SECTION
 ======================= */
@@ -464,6 +547,19 @@ section{opacity:0}
     </div>
         <img src="https://res.cloudinary.com/motortrak/f_auto,w_1920/v1751383892/locator/bentley/content/homepage/home-hero-desktop.jpg">
     </div>
+</section>
+<section class="hero">
+  <div class="overlay">
+    <p class="eyebrow">Explore</p>
+    <h1>Configure your perfect car</h1>
+    <p class="description">
+      Limited only by your imagination, here you can configure your perfect Bentley
+      using the Official Bentley configurator.
+    </p>
+    <button class="cta">
+      &#9881; CREATE YOUR OWN
+    </button>
+  </div>
 </section>
 
 <section class="cta">
