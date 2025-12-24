@@ -145,6 +145,67 @@ nav ul li:hover{color:var(--gold);}
     color:var(--gold);
     text-shadow:0 0 15px rgba(207,167,93,0.7);
 }
+/* =======================
+   ABOUT BENTLEY SECTION
+======================= */
+.about-bentley{
+    background:#ffffff;
+    color:#111;
+    padding:140px 80px;
+    text-align:center;
+}
+
+.about-bentley h2{
+    font-family:'Cinzel', serif;
+    font-size:42px;
+    margin-bottom:40px;
+}
+
+.about-bentley p{
+    max-width:900px;
+    margin:0 auto 24px;
+    font-size:16px;
+    line-height:1.8;
+    color:#333;
+}
+
+.about-buttons{
+    margin-top:50px;
+    display:flex;
+    justify-content:center;
+    gap:25px;
+    flex-wrap:wrap;
+}
+
+.about-btn{
+    padding:14px 34px;
+    font-size:14px;
+    letter-spacing:1px;
+    text-decoration:none;
+    border:1px solid #333;
+    transition:0.3s ease;
+}
+
+.about-btn.dark{
+    background:#2f3f38;
+    color:#fff;
+    border-color:#2f3f38;
+}
+
+.about-btn.dark:hover{
+    background:#000;
+}
+
+.about-btn.light{
+    background:#fff;
+    color:#111;
+}
+
+.about-btn.light:hover{
+    background:#111;
+    color:#fff;
+}
+
 
 /* BUTTON */
 .btn{
@@ -344,6 +405,32 @@ section{opacity:0}
         </div>
     </div>
 </section>
+<section class="about-bentley">
+    <h2>Bentley Motors</h2>
+
+    <p>
+        From W.O. Bentley, who founded Bentley Motors in 1919, to the current team of over
+        4,000 dedicated employees, the company’s extraordinary cars have always been designed
+        and built by exceptional people using only the finest of materials.
+        They have always been driven by exceptional people, too.
+        From the passionate Bentley Boys and Girls who raced the cars in the 1920s,
+        encouraging W.O. Bentley to achieve ever greater feats of engineering,
+        to the visionary Bentley owners of today, Bentley drivers help to shape the world around them.
+    </p>
+
+    <p>
+        In 2020 Bentley Motors launched the ‘Beyond100’ manifesto, which outlines our intention
+        to become the most sustainable luxury automotive brand in the world.
+        As a brand we are constantly looking forwards, using the links below you will find
+        our technological innovations and future vision for Bentley.
+    </p>
+
+    <div class="about-buttons">
+        <a href="#" class="about-btn dark">ABOUT BENTLEY</a>
+        <a href="#" class="about-btn light">CREATE YOUR OWN BENTLEY</a>
+    </div>
+</section>
+
 
 <section>
 <h2 style="text-align:center;font-family:Cinzel;margin-bottom:60px">Featured Models</h2>
