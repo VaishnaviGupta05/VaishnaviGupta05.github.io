@@ -105,115 +105,110 @@ nav{
 /* SLIDER — framed hero similar to reference */
 main{ padding-top:86px } /* leave space for the fixed nav */
 
-.slider{
-    position:relative;
-    display:flex;
-    justify-content:center;
-    padding:18px 10px 48px;
-    z-index:2;
-}
 
-/* frame + side fades */
-.slider-frame{
-    width:calc(100% - 120px);
-    max-width:1440px;
-    border-radius:4px;
-    overflow:hidden;
-    position:relative;
-    background:linear-gradient(180deg, rgba(0,0,0,0.05), rgba(0,0,0,0.03));
-    box-shadow: 0 40px 80px rgba(0,0,0,0.65);
-    border:1px solid rgba(255,255,255,0.03);
-    margin:0 20px;
-}
+/* SLIDER */
+.slider{height:100vh;overflow:hidden;position:relative; z-index:2;}
+.slides{display:flex;width:300%;animation:slide 18s infinite}
+.slide{width:100%;position:relative}
 
-/* subtle side fades to match the blurred edges in reference */
-.slider-frame::before,
-.slider-frame::after{
-    content:"";
-    position:absolute;
-    top:0;bottom:0;
-    width:68px;
-    z-index:12;
-    pointer-events:none;
-}
-.slider-frame::before{ left:0; background:linear-gradient(90deg, rgba(0,0,0,0.85), rgba(0,0,0,0.16) 35%, transparent 60%) }
-.slider-frame::after{ right:0; background:linear-gradient(270deg, rgba(0,0,0,0.85), rgba(0,0,0,0.16) 35%, transparent 60%) }
-
-/* viewport with constrained height so images crop correctly */
-.slider-viewport{
-    height:72vh;
-    max-height:920px;
-    min-height:320px;
-    overflow:hidden;
-    position:relative;
-    background:#000;
-}
-
-/* slides row and automatic sliding (CSS keyframes) */
-.slides{
-    display:flex;
-    width:300%;
-    height:100%;
-    transition: transform .8s cubic-bezier(.22,.9,.36,1);
-    animation: slide-anim 18s linear infinite;
-}
-
-/* each slide */
-.slide{ flex:0 0 100%; position:relative; height:100%; }
-
-/* image sizing and focal point — tuned so car sits right in crop like the reference */
 .slide img{
     width:100%;
-    height:100%;
+    height:100vh;
     object-fit:cover;
-    object-position: 60% 48%;
-    display:block;
-    filter:contrast(112%) saturate(120%);
-    transform-origin:center center;
-    transition: transform 10s linear;
-}
-.slide img{ transform:scale(1.00) }
-.slide:hover img{ transform:scale(1.02) }
-
-/* sliding keyframes — three slides */
-@keyframes slide-anim{
-    0%{ transform:translateX(0%) }
-    28%{ transform:translateX(0%) }
-    33%{ transform:translateX(-100%) }
-    61%{ transform:translateX(-100%) }
-    66%{ transform:translateX(-200%) }
-    94%{ transform:translateX(-200%) }
-    100%{ transform:translateX(0%) }
+    filter:brightness(100%) contrast(115%) saturate(120%);
+    animation:zoom 16s linear infinite;
+    transition:1s;
 }
 
-/* top-left counter/progress styling */
-.slider-ui{
+/* Add glow behind slider content */
+.slide::after{
+    content:"";
     position:absolute;
-    top:20px;
-    left:26px;
-    z-index:18;
-    pointer-events:none;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(207,167,93,0.08);
+    mix-blend-mode:overlay;
 }
-.counter{
-    display:flex;
-    gap:12px;
-    align-items:center;
-    background: rgba(13,11,10,0.56);
-    padding:8px 12px;
-    border-radius:4px;
-    color:#fff;
-    font-size:13px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
-    backdrop-filter: blur(6px);
+
+@keyframes zoom{from{transform:scale(1)}to{transform:scale(1.08)}}
+@keyframes slide{
+    0%,30%{margin-left:0}
+    35%,65%{margin-left:-100%}
+    70%,100%{margin-left:-200%}
 }
-.counter .label{ font-weight:600; letter-spacing:1px; }
+
+.slide-content{
+    position:absolute;
+    bottom:22%;
+    left:8%;
+    max-width:600px;
+    z-index:3;
+}
+
+.slide-content h1{
+    font-family:'Cinzel', serif;
+    font-size:56px;
+    color:var(--gold);
+    text-shadow:0 0 15px rgba(207,167,93,0.7);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+  background-color: #000;
+}
+
+HERO SECTION
+ .hero {
+ position: relative;
+  height: 100vh;
+  background: url("https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/homepage/october-24/Configure%20your%20perfect%20car%20Main.jpg/_jcr_content/renditions/original.image_file.1920.823.file/Configure%20your%20perfect%20car%20Main.jpg") center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+}
+
+/* DARK GRADIENT OVER IMAGE */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    rgba(100, 97, 97, 0.4),
+    rgba(0, 0, 0, 0.6)
+  );
+}
+
+/* CENTER GLASS PANEL */
+.overlay {
+  position: relative;
+  max-width: 600px;
+  padding: 50px 40px;
+  text-align: center;
+  background: rgba(120, 95, 55, 0.6);
+  backdrop-filter: blur(8px);
+  color: #fff;
+}
+
+/* SMALL TOP TEXT */
+.eyebrow {
+  font-size: 14px;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+  opacity: 0.85;
+ }
 
 /* progress bar that fills during the slider cycle */
 .progress-track{ width:220px; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden; }
 .progress-fill{ height:100%; width:0%; background:linear-gradient(90deg,var(--gold), rgba(255,255,255,0.6)); animation:progress 18s linear infinite; transform-origin:left center; }
 @keyframes progress{
     0%{ width:0% } 33%{ width:33% } 66%{ width:66% } 100%{ width:100% }
-}
+} */
 
 /* top-right arrows (visual) */
 .slider-arrows{
@@ -369,20 +364,32 @@ footer{ background:#f7f6f3; color:#111; padding:80px 60px 40px; }
             </div>
         </div>
 
-        <!-- slides viewport -->
-        <div class="slider-viewport">
-            <div class="slides" role="list">
-                <div class="slide" role="listitem">
-                    <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/models/27my/supersports/Homepage%20Slider.jpg" alt="Supersports">
-                </div>
-                <div class="slide" role="listitem">
-                    <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/models/26my/bentayga-speed/Homepage%20Main.jpg" alt="Bentayga Speed">
-                </div>
-                <div class="slide" role="listitem">
-                    <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/homepage/26my-azure/GTC%20Azure%20Desktop%20Dynamic.jpg" alt="GTC Azure">
-                </div>
+       <section class="slider">
+    <div class="slides">
+        <div class="slide">
+            <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/models/27my/supersports/Homepage%20Slider.jpg">
+            <div class="slide-content">
+                <h1>Supersports</h1>
+                <a class="btn">EXPLORE</a>
             </div>
         </div>
+        <div class="slide">
+            <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/models/26my/bentayga-speed/Homepage%20Main.jpg">
+            <div class="slide-content">
+                <h1>Continental GT</h1>
+                <a class="btn">DISCOVER</a>
+            </div>
+        </div>
+        <div class="slide">
+            <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/homepage/26my-azure/GTC%20Azure%20Desktop%20Dynamic.jpg">
+            <div class="slide-content">
+                <h1>Bentayga</h1>
+                <a class="btn">VIEW MODELS</a>
+            </div>
+        </div>
+    </div>
+</section>
+
 
         <div class="slider-dots" aria-hidden="true">
             <span class="dot"></span>
