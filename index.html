@@ -13,13 +13,9 @@
     --gold:#cfa75d;
     --bg-dark:#0d0d0d;
     --card-gradient:linear-gradient(145deg,#1a1a1a,#111111);
-    --nav-brown-start: rgba(66,36,22,0.95);
-    --nav-brown-end: rgba(30,16,11,0.85);
 }
 
-/* Reset */
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%}
+/* Animate the body background */
 body{
     font-family:'Montserrat', sans-serif;
     background: linear-gradient(45deg, #0d0d0d, #1b1b1b, #111111, #222222);
@@ -27,6 +23,7 @@ body{
     color:#fff;
     overflow-x:hidden;
     animation: gradientShift 15s ease infinite;
+    position: relative;
     -webkit-font-smoothing:antialiased;
     -moz-osx-font-smoothing:grayscale;
 }
@@ -37,74 +34,199 @@ body{
     100%{background-position:0% 50%}
 }
 
-/* NAVBAR — centered logo, left menu, right action buttons (visual like reference) */
+/* Subtle glowing overlay */
+body::before {
+    content:"";
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: radial-gradient(circle at 30% 30%, rgba(207,167,93,0.08), transparent 70%),
+                radial-gradient(circle at 70% 70%, rgba(207,167,93,0.08), transparent 70%);
+    pointer-events:none;
+    z-index:1;
+}
+
+/* ----------------------------
+   NAVBAR (centered logo, transparent + animated overlay)
+   ---------------------------- */
 nav{
     position:fixed;
     top:0;
     left:0;
-    right:0;
-    height:76px;
+    width:100%;
+    padding:18px 60px;
+    z-index:200;
     display:grid;
-    grid-template-columns:1fr auto 1fr;
+    grid-template-columns: 1fr auto 1fr;
     align-items:center;
-    padding:0 48px;
-    z-index:120;
-    background: linear-gradient(180deg, var(--nav-brown-start), var(--nav-brown-end));
-    box-shadow: 0 8px 32px rgba(0,0,0,0.6);
-    border-bottom: 1px solid rgba(255,255,255,0.03);
+    gap:12px;
+    background:transparent; /* base transparent */
+    box-shadow: 0 6px 30px rgba(0,0,0,0.06);
+    backdrop-filter: blur(6px); /* keep subtle blur so text remains readable */
 }
 
-/* left nav items */
-.nav-left{ justify-self:start; }
-.nav-left ul{
+/* animated translucent overlay behind nav that changes with slider */
+nav::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index:199; /* behind nav content (nav content z-index default is auto > this will be placed behind since nav children stack above) */
+    pointer-events:none;
+    background: linear-gradient(90deg, rgba(4,16,24,0.45) 0%, rgba(7,20,26,0.25) 100%);
+    transition: background .35s linear;
+    animation: navOverlay 18s infinite;
+    mix-blend-mode: normal;
+}
+
+/* keyframes synchronized roughly with slider animation (0-30% slide1, 35-65% slide2, 70-100% slide3) */
+@keyframes navOverlay{
+    /* Slide 1 timeframe - slightly warm-dark */
+    0%   { background: linear-gradient(90deg, rgba(4,16,24,0.55) 0%, rgba(7,20,26,0.28) 100%); }
+    30%  { background: linear-gradient(90deg, rgba(4,16,24,0.55) 0%, rgba(7,20,26,0.28) 100%); }
+
+    /* transition to slide 2 colors (more neutral / brownish) */
+    35%  { background: linear-gradient(90deg, rgba(30,12,8,0.48) 0%, rgba(14,12,20,0.18) 100%); }
+    65%  { background: linear-gradient(90deg, rgba(30,12,8,0.48) 0%, rgba(14,12,20,0.18) 100%); }
+
+    /* slide 3 timeframe - cooler */
+    70%  { background: linear-gradient(90deg, rgba(6,18,28,0.50) 0%, rgba(6,10,14,0.16) 100%); }
+    100% { background: linear-gradient(90deg, rgba(6,18,28,0.50) 0%, rgba(6,10,14,0.16) 100%); }
+}
+
+/* Left navigation (desktop links) */
+.left-nav{
     display:flex;
-    gap:28px;
-    list-style:none;
-    font-size:13px;
-    letter-spacing:1.6px;
-    color:rgba(255,255,255,0.95);
     align-items:center;
+    gap:22px;
+    justify-self:start;
 }
-.nav-left li{ cursor:pointer; opacity:0.95; transition:color .18s, opacity .18s; }
-.nav-left li:hover{ color:var(--gold); opacity:1; }
-
-/* centered logo */
-.logo{ justify-self:center; display:flex; align-items:center; gap:14px; }
-.logo img{ height:34px; display:block; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6)); }
-
-/* right action buttons */
-.nav-right{ justify-self:end; display:flex; gap:12px; align-items:center; }
-.btn-outline{
-    border:1px solid rgba(255,255,255,0.9);
-    padding:10px 14px;
-    border-radius:4px;
-    color:#fff;
-    font-size:13px;
+.left-nav a{
+    color: #d6e0e2;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:2px;
     text-decoration:none;
-    background:transparent;
-    transition: background .18s, transform .12s;
+    font-weight:600;
+    padding:6px 0;
+    transition: color .18s ease, transform .12s ease;
+    text-shadow: 0 1px 0 rgba(0,0,0,0.25);
 }
-.btn-outline:hover{ background: rgba(255,255,255,0.06); transform:translateY(-2px); }
+.left-nav a:hover{
+    color: var(--gold);
+    transform:translateY(-1px);
+}
 
-/* mobile menu toggle (CSS-only) */
-.menu-toggle{ position:absolute; left:-9999px; }
-.menu-label{
+/* Center logo block */
+.center-logo{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-self:center;
+    gap:6px;
+    position:relative;
+    z-index:210; /* bring above overlay */
+}
+.center-logo img{
+    height:44px;
+    display:block;
+    filter:brightness(1.02);
+}
+.center-logo .brand{
+    font-family:'Cinzel', serif;
+    font-size:12px;
+    letter-spacing:4px;
+    color:#ffffff;
+    margin-top:2px;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.45);
+}
+
+/* Right utilities */
+.right-nav{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    justify-self:end;
+    justify-content:flex-end;
+}
+.right-nav a{
+    color:#d6e0e2;
+    font-size:12px;
+    text-decoration:none;
+    text-transform:uppercase;
+    letter-spacing:1.6px;
+    padding:8px 14px;
+    border-radius:4px;
+    transition: all .16s ease;
+    border:1px solid transparent;
+    text-shadow: 0 1px 0 rgba(0,0,0,0.25);
+}
+.right-nav .request-btn{
+    border:1px solid rgba(255,255,255,0.10);
+    background:transparent;
+}
+.right-nav a:hover{
+    color:var(--gold);
+    transform:translateY(-2px);
+}
+
+/* Mobile menu button (small screens) */
+.menu-btn{
     display:none;
-    font-size:24px;
+    font-size:26px;
     color:#fff;
+    background:transparent;
+    border:none;
     cursor:pointer;
 }
 
-/* responsive */
-@media (max-width:980px){
-    nav{ padding:0 18px; grid-template-columns:auto 1fr auto; height:64px; }
-    .nav-left ul{ display:none; }
-    .menu-label{ display:block; justify-self:start; margin-left:6px; }
+/* Mobile panel and checkbox */
+#menu-toggle{ display:none; }
+
+/* Mobile styles */
+@media (max-width:900px){
+    nav{
+        padding:14px 20px;
+        grid-template-columns: auto 1fr auto;
+        align-items:center;
+    }
+    .left-nav{
+        /* hide horizontal links on mobile */
+        display:none;
+    }
+    .menu-btn{ display:block; grid-column:1; justify-self:start; z-index:215; }
+    .center-logo{ grid-column:2; justify-self:center; }
+    .right-nav{ grid-column:3; justify-self:end; }
+
+    /* Off-canvas panel (when checkbox checked) */
+    .mobile-panel{
+        position:fixed;
+        top:64px;
+        right:-100%;
+        width:260px;
+        height:calc(100vh - 64px);
+        background:linear-gradient(180deg, rgba(2,6,8,0.92), rgba(4,10,14,0.86));
+        padding:28px;
+        display:flex;
+        flex-direction:column;
+        gap:18px;
+        transition: right .36s ease;
+        z-index:210;
+        border-left:1px solid rgba(255,255,255,0.03);
+    }
+    #menu-toggle:checked ~ .mobile-panel{
+        right:0;
+    }
+    .mobile-panel a{
+        color:#d6e0e2;
+        text-transform:uppercase;
+        letter-spacing:1.8px;
+        font-weight:600;
+        text-decoration:none;
+        padding:8px 6px;
+    }
 }
 
-/* SLIDER — framed hero similar to reference */
-main{ padding-top:86px } /* leave space for the fixed nav */
-
+/* End nav styles */
 
 /* SLIDER */
 .slider{height:100vh;overflow:hidden;position:relative; z-index:2;}
@@ -152,25 +274,124 @@ main{ padding-top:86px } /* leave space for the fixed nav */
     text-shadow:0 0 15px rgba(207,167,93,0.7);
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Helvetica Neue", Arial, sans-serif;
+/* ---- NEW: MULLINER HERO SECTION ---- */
+.mulliner-section{
+    position:relative;
+    height:520px;
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    overflow:hidden;
+    margin-top:30px;
+    z-index:2;
 }
 
-body {
-  background-color: #000;
+/* background image (right aligned so car sits right) */
+.mulliner-section .mulliner-bg{
+    position:absolute;
+    inset:0;
+    background-image: url("https://res.cloudinary.com/motortrak/f_auto,w_1920/v1751383892/locator/bentley/content/homepage/home-hero-desktop.jpg");
+    background-position: center right;
+    background-size: cover;
+    filter:brightness(0.7) contrast(1.02);
+    z-index:1;
 }
 
-HERO SECTION
- .hero {
- position: relative;
+/* subtle dark overlay */
+.mulliner-section::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(90deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.35) 45%, rgba(0,0,0,0.05) 70%);
+    z-index:2;
+}
+
+/* glass panel on left */
+.mulliner-panel{
+    position:relative;
+    z-index:3;
+    margin-left:6%;
+    width:460px;
+    max-width:85%;
+    padding:34px 36px;
+    background: linear-gradient(180deg, rgba(47,47,47,0.45), rgba(25,25,25,0.38));
+    backdrop-filter: blur(8px) saturate(120%);
+    border-radius:8px;
+    color:#fff;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+}
+
+/* decorative layered translucent boxes */
+.mulliner-panel::after,
+.mulliner-panel::before{
+    content:"";
+    position:absolute;
+    right:-36px;
+    top:12px;
+    width:140px;
+    height:120px;
+    background:rgba(255,255,255,0.03);
+    box-shadow: 8px 8px 40px rgba(0,0,0,0.6);
+    transform: skewX(-12deg);
+    z-index:-1;
+    border-radius:4px;
+    mix-blend-mode:overlay;
+}
+.mulliner-panel::before{
+    right:-76px;
+    top:60px;
+    width:120px;
+    height:100px;
+    background:linear-gradient(180deg, rgba(207,167,93,0.06), rgba(255,255,255,0.02));
+    transform: skewX(-8deg);
+    opacity:0.8;
+}
+
+/* text */
+.mulliner-eyebrow{font-size:13px; opacity:0.9; margin-bottom:10px}
+.mulliner-title{font-family:'Cinzel', serif; font-size:46px; margin:6px 0 14px; color:#fff}
+.mulliner-desc{color:#ddd; line-height:1.65; margin-bottom:20px; font-size:15px}
+
+/* explore button */
+.mulliner-explore{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    background:#243a34;
+    color:#dbe8e3;
+    padding:12px 18px;
+    border-radius:6px;
+    text-decoration:none;
+    font-weight:600;
+    font-size:13px;
+    border:1px solid rgba(255,255,255,0.04);
+}
+.mulliner-explore:hover{
+    background:#1b2b26;
+    transform:translateY(-2px);
+}
+
+/* responsive */
+@media (max-width:900px){
+    .mulliner-section{height:420px}
+    .mulliner-panel{width:78%; margin-left:6%}
+    .mulliner-panel::after, .mulliner-panel::before{display:none}
+}
+@media (max-width:560px){
+    .mulliner-section{height:380px}
+    .mulliner-panel{padding:22px; margin-left:5%}
+    .mulliner-title{font-size:32px}
+}
+
+/* Reset and base - small repeated reset removed where possible */
+/* HERO SECTION */
+.hero {
+  position: relative;
   height: 100vh;
   background: url("https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/homepage/october-24/Configure%20your%20perfect%20car%20Main.jpg/_jcr_content/renditions/original.image_file.1920.823.file/Configure%20your%20perfect%20car%20Main.jpg") center/cover no-repeat;
   display: flex;
   align-items: center;
-  justify-content: center; 
+  justify-content: center;
 }
 
 /* DARK GRADIENT OVER IMAGE */
@@ -182,6 +403,7 @@ HERO SECTION
     rgba(100, 97, 97, 0.4),
     rgba(0, 0, 0, 0.6)
   );
+  z-index:1;
 }
 
 /* CENTER GLASS PANEL */
@@ -193,6 +415,7 @@ HERO SECTION
   background: rgba(120, 95, 55, 0.6);
   backdrop-filter: blur(8px);
   color: #fff;
+  z-index:2;
 }
 
 /* SMALL TOP TEXT */
@@ -201,118 +424,289 @@ HERO SECTION
   letter-spacing: 2px;
   margin-bottom: 12px;
   opacity: 0.85;
- }
-
-/* progress bar that fills during the slider cycle */
-.progress-track{ width:220px; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden; }
-.progress-fill{ height:100%; width:0%; background:linear-gradient(90deg,var(--gold), rgba(255,255,255,0.6)); animation:progress 18s linear infinite; transform-origin:left center; }
-@keyframes progress{
-    0%{ width:0% } 33%{ width:33% } 66%{ width:66% } 100%{ width:100% }
-} */
-
-/* top-right arrows (visual) */
-.slider-arrows{
-    position:absolute;
-    top:20px;
-    right:22px;
-    display:flex;
-    gap:10px;
-    z-index:18;
-}
-.arrow{
-    width:44px;
-    height:40px;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    background: rgba(12,10,9,0.5);
-    border-radius:4px;
-    color:#fff;
-    border:1px solid rgba(255,255,255,0.04);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.45);
-    cursor:default; /* decorative — no JS */
-}
-.arrow svg{ width:14px; height:14px; }
-
-/* bottom decorative dots */
-.slider-dots{
-    position:absolute;
-    left:50%;
-    transform:translateX(-50%);
-    bottom:18px;
-    display:flex;
-    gap:10px;
-    z-index:18;
-}
-.dot{ width:10px; height:10px; border-radius:50%; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.03); }
-
-/* bottom shadow overlay */
-.slider-frame .bottom-shadow{
-    position:absolute;
-    left:0; right:0; bottom:0;
-    height:56px;
-    background:linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,0.6));
-    z-index:10;
-    pointer-events:none;
 }
 
-/* SECTION reveal (CSS-only approximation) */
-section{ padding:120px 60px; opacity:1; transform:none; transition: all .6s ease; }
+/* MAIN HEADING */
+.overlay h1 {
+  font-size: 36px;
+  font-weight: 300;
+  margin-bottom: 20px;
+}
 
-/* ABOUT and other sections keep original styling but tuned for this layout */
+/* DESCRIPTION */
+.description {
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 30px;
+  opacity: 0.9;
+}
+
+/* BUTTON */
+.cta {
+  background-color: #2f4f4f;
+  color: #fff;
+  border: none;
+  padding: 14px 26px;
+  font-size: 14px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.cta:hover {
+  background-color: #3f6f6f;
+}
+
+/* =======================
+   ABOUT BENTLEY SECTION
+======================= */
 .about-bentley{
     background:#ffffff;
     color:#111;
     padding:140px 80px;
     text-align:center;
 }
-.about-bentley h2{ font-family:'Cinzel', serif; font-size:42px; margin-bottom:40px; }
-.about-bentley p{ max-width:900px; margin:0 auto 24px; font-size:16px; line-height:1.8; color:#333; }
-.about-buttons{ margin-top:50px; display:flex; justify-content:center; gap:25px; flex-wrap:wrap; }
-.about-btn{ padding:14px 34px; font-size:14px; letter-spacing:1px; text-decoration:none; border:1px solid #333; transition:0.3s ease; }
-.about-btn.dark{ background:#2f3f38; color:#fff; border-color:#2f3f38; }
-.about-btn.light{ background:#fff; color:#111; }
 
-/* cards & gallery */
+.about-bentley h2{
+    font-family:'Cinzel', serif;
+    font-size:42px;
+    margin-bottom:40px;
+}
+
+.about-bentley p{
+    max-width:900px;
+    margin:0 auto 24px;
+    font-size:16px;
+    line-height:1.8;
+    color:#333;
+}
+
+.about-buttons{
+    margin-top:50px;
+    display:flex;
+    justify-content:center;
+    gap:25px;
+    flex-wrap:wrap;
+}
+
+.about-btn{
+    padding:14px 34px;
+    font-size:14px;
+    letter-spacing:1px;
+    text-decoration:none;
+    border:1px solid #333;
+    transition:0.3s ease;
+}
+
+.about-btn.dark{
+    background:#2f3f38;
+    color:#fff;
+    border-color:#2f3f38;
+}
+
+.about-btn.dark:hover{
+    background:#000;
+}
+
+.about-btn.light{
+    background:#fff;
+    color:#111;
+}
+
+.about-btn.light:hover{
+    background:#111;
+    color:#fff;
+}
+
+
+/* BUTTON */
+.btn{
+    display:inline-block;
+    margin-top:20px;
+    padding:14px 30px;
+    border:1px solid var(--gold);
+    color:var(--gold);
+    text-decoration:none;
+    font-weight:600;
+    transition:.3s;
+    box-shadow:0 5px 20px rgba(207,167,93,0.4);
+}
+.btn:hover{
+    background:var(--gold);
+    color:#000;
+    box-shadow:0 10px 30px rgba(207,167,93,0.7);
+}
+
+/* SECTIONS */
+section{padding:120px 60px}
+
+/* CARDS */
 .card, .model-card{
     background:var(--card-gradient);
     border-radius:16px;
     box-shadow:0 25px 50px rgba(0,0,0,0.7);
     transition:.4s;
     position: relative;
+    color:#fff;
+    padding:12px;
+    min-height: 140px;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    align-items:flex-start;
 }
-.model-card{ perspective:1000px; padding:20px; }
-.model-card img{ width:100%; height:240px; object-fit:cover; border-radius:12px; transition:.5s; }
-.model-card:hover img{ transform:rotateY(8deg) scale(1.08); filter:brightness(115%); }
-.price-tag{ position:absolute; top:12px; right:12px; background:var(--gold); color:#000; font-weight:700; padding:8px 14px; border-radius:12px; font-family:'Montserrat',sans-serif; box-shadow:0 5px 15px rgba(0,0,0,0.4); z-index:5; }
 
-/* gallery */
-.gallery-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:25px; }
-.gallery-grid img{ height:280px; object-fit:cover; border-radius:14px; box-shadow:0 25px 55px rgba(0,0,0,.8); transition:.4s; }
-.gallery-grid img:hover{ transform:scale(1.07); box-shadow:0 35px 80px rgba(207,167,93,.35); }
-
-/* footer */
-footer{ background:#f7f6f3; color:#111; padding:80px 60px 40px; }
-.footer-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:50px; margin-bottom:50px; }
-.footer-col h4{ font-family:'Cinzel'; margin-bottom:18px; font-size:18px; }
-.footer-bottom{ border-top:1px solid #ccc; padding-top:30px; display:flex; flex-wrap:wrap; gap:25px; font-size:13px; justify-content:center; color:#111; }
-
-/* responsive tweaks */
-@media (max-width:1200px){
-    .slider-frame{ width:calc(100% - 48px) }
-    .slider-frame::before,.slider-frame::after{ width:44px }
-    .progress-track{ width:160px }
+.card:hover, .model-card:hover{
+    transform:translateY(-10px);
+    box-shadow:0 35px 80px rgba(207,167,93,0.3);
 }
-@media (max-width:900px){
-    .slider-viewport{ height:48vh }
-    .slider-frame{ margin:0 8px }
-    .nav-left ul{ display:none }
-    .menu-label{ display:block }
+
+/* 3D TILT IMAGE */
+.model-card{
+    perspective:1000px;
+    padding:20px;
 }
-@media (max-width:480px){
-    .slider-viewport{ height:34vh }
-    .arrow{ width:36px; height:34px }
-    nav{ padding:0 12px }
+.model-card img{
+    width:100%;
+    height:240px;
+    object-fit:cover;
+    border-radius:12px;
+    transition:.5s;
+}
+.model-card:hover img{
+    transform:rotateY(8deg) scale(1.08);
+    filter:brightness(115%);
+}
+
+/* Price tag */
+.price-tag {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: var(--gold);
+    color: #000;
+    font-weight: 700;
+    padding: 8px 14px;
+    border-radius: 12px;
+    font-family: 'Montserrat', sans-serif;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+    z-index: 5;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.model-card:hover .price-tag {
+    transform: scale(1.1);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+/* Add description */
+.model-info{
+    margin-top:12px;
+    font-size:16px;
+    color:#ccc;
+}
+
+/* GALLERY */
+.gallery-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:25px;
+}
+
+.gallery-grid img{
+    height:280px;
+    object-fit:cover;
+    border-radius:14px;
+    box-shadow:0 25px 55px rgba(0,0,0,.8);
+    transition:.4s;
+}
+.gallery-grid img:hover{
+    transform:scale(1.07);
+    box-shadow:0 35px 80px rgba(207,167,93,.35);
+}
+
+/* CTA */
+.cta{text-align:center;background:linear-gradient(135deg,#0b0b0b,#1f1f1f);padding:140px 60px}
+.cta h2{color:var(--gold);font-family:'Cinzel';text-shadow:0 0 10px rgba(207,167,93,0.7)}
+.cta .btn{font-size:18px;padding:16px 36px}
+
+/* FOOTER */
+footer{text-align:center;padding:30px;background:linear-gradient(135deg,#0b0b0b,#1a1a1a);opacity:.85;color:#ccc}
+/* =======================
+   MEGA FOOTER (NEW)
+======================= */
+footer{
+    background:#f7f6f3;
+    color:#111;
+    padding:80px 60px 40px;
+}
+
+.footer-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:50px;
+    margin-bottom:50px;
+}
+
+.footer-col h4{
+    font-family:'Cinzel';
+    margin-bottom:18px;
+    font-size:18px;
+}
+
+.footer-col ul{
+    list-style:none;
+    padding:0;
+}
+.footer-col li{
+    margin-bottom:10px;
+    font-size:14px;
+    cursor:pointer;
+}
+.footer-col li:hover{
+    color:var(--gold);
+}
+
+.footer-bottom{
+    border-top:1px solid #ccc;
+    padding-top:30px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:25px;
+    font-size:13px;
+    justify-content:center;
+}
+
+/* CSS-only section reveal (stagger on load) */
+section{
+    opacity:0;
+    transform:translateY(24px);
+    animation:fadeUp 0.9s ease forwards;
+}
+
+/* Stagger reveal of sections on page load */
+section:nth-of-type(1){animation-delay:0.05s}
+section:nth-of-type(2){animation-delay:0.18s}
+section:nth-of-type(3){animation-delay:0.32s}
+section:nth-of-type(4){animation-delay:0.45s}
+section:nth-of-type(5){animation-delay:0.58s}
+section:nth-of-type(6){animation-delay:0.72s}
+section:nth-of-type(7){animation-delay:0.86s}
+section:nth-of-type(8){animation-delay:1s}
+section:nth-of-type(9){animation-delay:1.12s}
+
+@keyframes fadeUp{
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* small responsive tweaks */
+@media (max-width:700px){
+  .slide-content h1{font-size:36px}
+  .overlay{padding:30px 20px; max-width:90%}
+  section{padding:80px 20px}
 }
 </style>
 </head>
@@ -320,88 +714,88 @@ footer{ background:#f7f6f3; color:#111; padding:80px 60px 40px; }
 <body>
 
 <nav>
-    <div class="nav-left">
-        <ul>
-            <li>MODELS</li>
-            <li>CULTURE</li>
-            <li>LIFESTYLE</li>
-            <li>YOUR BENTLEY</li>
-            <li>ABOUT BENTLEY</li>
-        </ul>
+    <!-- mobile menu checkbox -->
+    <input type="checkbox" id="menu-toggle" aria-label="Toggle menu">
+
+    <!-- left: desktop links (becomes hidden on mobile) -->
+    <div class="left-nav" aria-hidden="false">
+        <a href="#">Models</a>
+        <a href="#">Culture</a>
+        <a href="#">Lifestyle</a>
+        <a href="#">Your Bentley</a>
+        <a href="#">About Bentley</a>
     </div>
 
-    <div class="logo">
-        <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/logos/Simplified%20Negative_BMdotCom_1000x500_2x1.png/_jcr_content/renditions/original./Simplified%20Negative_BMdotCom_1000x500_2x1.png" alt="Bentley">
+    <!-- center: logo -->
+    <div class="center-logo" role="banner" aria-label="Bentley">
+        <!-- you can replace image src with your SVG/logo file -->
+        <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/logos/Simplified%20Negative_BMdotCom_1000x500_2x1.png/_jcr_content/renditions/original./Simplified%20Negative_BMdotCom_1000x500_2x1.png" alt="Bentley logo">
+        <div class="brand">BENTLEY</div>
     </div>
 
-    <div class="nav-right">
-        <a href="#" class="btn-outline">REQUEST TEST DRIVE</a>
-        <a href="#" class="btn-outline">CONFIGURATOR</a>
-        <a href="#" class="btn-outline">LOCATE DEALER</a>
+    <!-- right: utility links / CTAs -->
+    <div class="right-nav" aria-hidden="false">
+        <a href="#" class="request-btn">Request Test Drive</a>
+        <a href="#">Configurator</a>
+        <a href="#">Locate Dealer</a>
+    </div>
+
+    <!-- mobile menu button (shows on small screens) -->
+    <label for="menu-toggle" class="menu-btn" aria-hidden="true">☰</label>
+
+    <!-- off-canvas mobile panel (content for mobile only) -->
+    <div class="mobile-panel" aria-hidden="true">
+        <a href="#">Models</a>
+        <a href="#">Culture</a>
+        <a href="#">Lifestyle</a>
+        <a href="#">Your Bentley</a>
+        <a href="#">About Bentley</a>
+        <hr style="border:0;border-top:1px solid rgba(255,255,255,0.04);margin:12px 0;">
+        <a href="#" class="request-btn">Request Test Drive</a>
+        <a href="#">Configurator</a>
+        <a href="#">Locate Dealer</a>
     </div>
 </nav>
 
-<main>
-
-<!-- Slider (CSS-only; automatic sliding, top-left counter/progress, decorative arrows) -->
-<section class="slider" aria-label="Main slider">
-    <div class="slider-frame" role="region" aria-label="Featured slides">
-        <!-- top-left counter + progress -->
-        <div class="slider-ui" aria-hidden="true">
-            <div class="counter">
-                <div class="label">1 / 3</div>
-                <div class="progress-track" style="display:none"><div class="progress-fill"></div></div>
-            </div>
-        </div>
-
-        <!-- top-right decorative arrows -->
-        <div class="slider-arrows" aria-hidden="true">
-            <div class="arrow" title="Previous">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 6L9 12L15 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-            <div class="arrow" title="Next">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-        </div>
-
-       <section class="slider">
-    <div class="slides">
+<section class="slider" aria-hidden="false">
+    <div class="slides" aria-hidden="false">
         <div class="slide">
-            <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/models/27my/supersports/Homepage%20Slider.jpg">
+            <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/models/27my/supersports/Homepage%20Slider.jpg" alt="Supersports">
             <div class="slide-content">
                 <h1>Supersports</h1>
-                <a class="btn">EXPLORE</a>
+                <a class="btn" href="#">EXPLORE</a>
             </div>
         </div>
         <div class="slide">
-            <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/models/26my/bentayga-speed/Homepage%20Main.jpg">
+            <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/models/26my/bentayga-speed/Homepage%20Main.jpg" alt="Continental GT">
             <div class="slide-content">
                 <h1>Continental GT</h1>
-                <a class="btn">DISCOVER</a>
+                <a class="btn" href="#">DISCOVER</a>
             </div>
         </div>
         <div class="slide">
-            <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/homepage/26my-azure/GTC%20Azure%20Desktop%20Dynamic.jpg">
+            <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/homepage/26my-azure/GTC%20Azure%20Desktop%20Dynamic.jpg" alt="Bentayga">
             <div class="slide-content">
                 <h1>Bentayga</h1>
-                <a class="btn">VIEW MODELS</a>
+                <a class="btn" href="#">VIEW MODELS</a>
             </div>
         </div>
     </div>
 </section>
 
-
-        <div class="slider-dots" aria-hidden="true">
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-        </div>
-
-        <div class="bottom-shadow"></div>
+<!-- MULLINER HERO (inserted) -->
+<section class="mulliner-section" aria-label="Mulliner showcase">
+    <div class="mulliner-bg" aria-hidden="true"></div>
+    <div class="mulliner-panel" role="region" aria-labelledby="mulliner-title">
+        <div class="mulliner-eyebrow">Explore</div>
+        <h2 id="mulliner-title" class="mulliner-title">MULLINER</h2>
+        <p class="mulliner-desc">
+            This is the bespoke offering at Bentley. A place where dreams are made real and nothing is impossible.
+        </p>
+        <a class="mulliner-explore" href="#" aria-label="Explore Mulliner">🗂 EXPLORE</a>
     </div>
 </section>
 
-<!-- ABOUT -->
 <section class="about-bentley">
     <h2>Bentley Motors</h2>
 
@@ -428,45 +822,43 @@ footer{ background:#f7f6f3; color:#111; padding:80px 60px 40px; }
     </div>
 </section>
 
-<!-- Featured Models -->
 <section>
     <h2 style="text-align:center;font-family:Cinzel;margin-bottom:60px">Featured Models</h2>
     <div class="gallery-grid">
-        <div class="model-card">
+        <div class="model-card" role="article" aria-label="Bentley Bentayga">
             <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/models/26my/bentayga-speed/Navigation%20Front.png" alt="Bentley Bentayga">
             <div class="price-tag">$180,000</div>
-            Bentley Bentayga
+            <div class="model-info">Bentley Bentayga</div>
         </div>
-        <div class="model-card">
+        <div class="model-card" role="article" aria-label="Continental GT">
             <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/navigation/model-nav/model-range/Spur%20Mulliner%20profile%20v2.png" alt="Continental GT">
             <div class="price-tag">$220,000</div>
-            Continental GT
+            <div class="model-info">Continental GT</div>
         </div>
-        <div class="model-card">
+        <div class="model-card" role="article" aria-label="Supersports">
             <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/models/27my/supersports/Nav%20Front%203.3.png" alt="Supersports">
             <div class="price-tag">$250,000</div>
-            Supersports
+            <div class="model-info">Supersports</div>
         </div>
     </div>
 </section>
 
-<!-- Gallery -->
 <section class="gallery">
     <h2 style="text-align:center;font-family:Cinzel;margin-bottom:60px">Luxury Gallery</h2>
     <div class="gallery-grid">
-        <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/models/25my/25my-gt/GT%20Speed%20Front%203.4%20v2.png/_jcr_content/renditions/original.image_file.1074.537.file/GT%20Speed%20Front%203.4%20v2.png" alt="">
-        <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/navigation/model-nav/mulliner/P2750%20Nav%20Front3.4.png/_jcr_content/renditions/original.image_file.1074.537.file/P2750%20Nav%20Front3.4.png" alt="">
-        <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/models/25my/25my-gt/GT%20Speed%20Front%203.4%20v2.png/_jcr_content/renditions/original.image_file.1074.537.file/GT%20Speed%20Front%203.4%20v2.png" alt="">
-        <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/homepage/launch/EWB%20Mulliner%20Card%20Item%20V2.jpg/_jcr_content/renditions/original.image_file.662.1324.file/EWB%20Mulliner%20Card%20Item%20V2.jpg" alt="">
-        <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/homepage/launch/Pre-Owned%20Card%20Media%202.jpg/_jcr_content/renditions/original.image_file.662.1324.file/Pre-Owned%20Card%20Media%202.jpg" alt="">
+        <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/models/25my/25my-gt/GT%20Speed%20Front%203.4%20v2.png/_jcr_content/renditions/original.image_file.1074.537.file/GT%20Speed%20Front%203.4%20v2.png" alt="GT Speed">
+        <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/navigation/model-nav/mulliner/P2750%20Nav%20Front3.4.png/_jcr_content/renditions/original.image_file.1074.537.file/P2750%20Nav%20Front3.4.png" alt="Mulliner">
+        <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/models/25my/25my-gt/GT%20Speed%20Front%203.4%20v2.png/_jcr_content/renditions/original.image_file.1074.537.file/GT%20Speed%20Front%203.4%20v2.png" alt="GT Speed duplicate">
+        <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/homepage/launch/EWB%20Mulliner%20Card%20Item%20V2.jpg/_jcr_content/renditions/original.image_file.662.1324.file/EWB%20Mulliner%20Card%20Item%20V2.jpg" alt="EWB Mulliner">
+        <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/homepage/launch/Pre-Owned%20Card%20Media%202.jpg/_jcr_content/renditions/original.image_file.662.1324.file/Pre-Owned%20Card%20Media%202.jpg" alt="Pre-Owned">
     </div>
 
-    <div style="margin-top:24px">
-        <img src="https://www.bentleymotors.com/content/dam/bm/websites/bmcom/bentleymotors-com/homepage/october-24/Configure%20your%20perfect%20car%20Main.jpg/_jcr_content/renditions/original.image_file.1920.823.file/Configure%20your%20perfect%20car%20Main.jpg" alt="" style="width:100%;border-radius:12px;box-shadow:0 25px 55px rgba(0,0,0,.8);margin-top:18px">
+    <!-- Additional hero-like image from original -->
+    <div style="margin-top:24px;">
+        <img src="https://res.cloudinary.com/motortrak/f_auto,w_1920/v1751383892/locator/bentley/content/homepage/home-hero-desktop.jpg" alt="Bentley Hero" style="width:100%; border-radius:10px; box-shadow:0 25px 55px rgba(0,0,0,.8); margin-top:20px;">
     </div>
 </section>
 
-<!-- Hero / Configurator panel -->
 <section class="hero">
   <div class="overlay">
     <p class="eyebrow">Explore</p>
@@ -475,16 +867,15 @@ footer{ background:#f7f6f3; color:#111; padding:80px 60px 40px; }
       Limited only by your imagination, here you can configure your perfect Bentley
       using the Official Bentley configurator.
     </p>
-    <button class="cta">
+    <button class="cta" aria-label="Create your own Bentley">
       &#9881; CREATE YOUR OWN
     </button>
   </div>
 </section>
 
-<!-- CTA -->
-<section class="cta" style="text-align:center;background:linear-gradient(135deg,#0b0b0b,#1f1f1f);padding:140px 60px">
-<h2 style="color:var(--gold);font-family:Cinzel;margin-bottom:20px">Begin Your Luxury Journey</h2>
-<a class="btn-outline" style="border-color:var(--gold); color:var(--gold); background:transparent; padding:12px 22px; font-weight:600">BOOK A TEST DRIVE</a>
+<section class="cta">
+    <h2>Begin Your Luxury Journey</h2>
+    <a class="btn" href="#">BOOK A TEST DRIVE</a>
 </section>
 
 <!-- MEGA FOOTER -->
@@ -551,5 +942,6 @@ footer{ background:#f7f6f3; color:#111; padding:80px 60px 40px; }
 <span>Contact Us</span>
 </div>
 </footer>
+
 </body>
 </html>
